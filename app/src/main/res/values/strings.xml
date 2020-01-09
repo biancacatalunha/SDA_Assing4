@@ -12,9 +12,8 @@
 
     <!-- User messages -->
     <string name="email_changed_successfully">Email changed successfully</string>
+    <string name="name_changed_successfully">Name changed successfully</string>
     <string name="email_is_invalid">Email is invalid</string>
-
-
 
 
 

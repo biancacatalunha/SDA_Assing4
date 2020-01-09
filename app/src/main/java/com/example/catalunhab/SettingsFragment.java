@@ -29,25 +29,47 @@ import com.example.sdaassign4_2019.R;
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private EditTextPreference email;
+    private EditTextPreference name;
     private static final String TAG = "SettingsFragment";
 
     /**
-     * Sets an onPreferenceChangedListener for email.
-     * If the email entered by the user in settings is valid, a toast display a success message.
-     * If the email is invalid, a toast displays an error message.
+     * Binds the preferences to the fragment
      *
      * @param savedInstanceState If the fragment is being re-created from
      * a previous saved state, this is the state.
+     * @param rootKey If non-null, this preference fragment should be rooted at the
+     * PreferenceScreen with this key.
      */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
+
+        email = findPreference("email");
+        name = findPreference("name");
+
+        onBindListeners(email);
+        inputValidation();
+    }
+
+    /**
+     * Sets an onPreferenceChangedListener for email.
+     * If the email entered by the user in settings is valid, a toast displays a success message
+     * and the value is updated in SharedPreferences.
+     * If the email is invalid, a toast displays an error message and the value is not updated
+     * in SharedPreferences.
+     *
+     * Sets an onPreferenceChangedListener for name.
+     * When the name is changed, a success message is displayed and the value is updated in
+     * SharedPreferences.
+     *
+     */
+    private void inputValidation() {
 
         email.setOnPreferenceChangeListener(
                 new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Log.d(TAG, "onPreferenceChange got called " + newValue);
+                        Log.d(TAG, "Email onPreferenceChange got called. New value: " + newValue);
 
                         if(android.util.Patterns.EMAIL_ADDRESS.matcher(newValue.toString()).matches()) {
                             Toast toast = Toast.makeText(getContext(), R.string.email_changed_successfully, Toast.LENGTH_SHORT);
@@ -65,25 +87,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                 });
 
+        name.setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Log.d(TAG, "Name onPreferenceChange got called. New value: " + newValue);
+
+                        Toast toast = Toast.makeText(getContext(), R.string.name_changed_successfully, Toast.LENGTH_SHORT);
+                        toast.show();
+
+                        Log.d(TAG, "Name is changed successfully");
+                        return true;
+                    }
+                });
     }
-
-    /**
-     * Binds the preferences to the fragment
-     *
-     * @param savedInstanceState If the fragment is being re-created from
-     * a previous saved state, this is the state.
-     * @param rootKey If non-null, this preference fragment should be rooted at the
-     * PreferenceScreen with this key.
-     */
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
-
-        email = findPreference("email");
-
-        onBindListeners(email);
-    }
-
 
     /**
      * When the user clicks on email, the keyboard's main screen displays "@" and "."
