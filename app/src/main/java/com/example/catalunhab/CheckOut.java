@@ -1,4 +1,4 @@
-package com.example.sdaassign4_2019;
+package com.example.catalunhab;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,10 +10,9 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import com.example.sdaassign4_2019.R;
+
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class CheckOut extends AppCompatActivity {
 

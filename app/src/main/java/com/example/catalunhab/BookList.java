@@ -1,20 +1,19 @@
-package com.example.sdaassign4_2019;
+package com.example.catalunhab;
 
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.sdaassign4_2019.R;
+
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 /**
@@ -31,7 +30,7 @@ public class BookList extends Fragment {
         // Required empty public constructor
     }
 
-    ViewPageAdapter adapter;
+    SectionsPagerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

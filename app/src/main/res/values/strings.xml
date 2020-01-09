@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">SDA Assign4_2019</string>
+    <string name="app_name">SDA Assign4 2020 Bianca Catalunha</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="tab_text_1">Home</string>
+    <string name="tab_text_2">Books</string>
+    <string name="tab_text_3">Library</string>
+
+
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

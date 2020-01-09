@@ -1,4 +1,4 @@
-package com.example.sdaassign4_2019;
+package com.example.catalunhab;
 
         /*
          * Copyright (C) 2016 The Android Open Source Project
@@ -30,6 +30,8 @@ package com.example.sdaassign4_2019;
 
         import androidx.annotation.NonNull;
         import androidx.recyclerview.widget.RecyclerView;
+
+        import com.example.sdaassign4_2019.R;
 
         import java.util.ArrayList;
 

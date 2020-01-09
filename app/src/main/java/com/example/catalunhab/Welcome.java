@@ -1,17 +1,15 @@
-package com.example.sdaassign4_2019;
+package com.example.catalunhab;
 
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.example.sdaassign4_2019.R;
 
 
 /**
