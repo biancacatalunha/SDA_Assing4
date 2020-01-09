@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">SDA Assign4 2020 Bianca Catalunha</string>
+
+    <!-- Labels -->
     <string name="name">Name</string>
     <string name="email">Email</string>
+
+    <!-- Tab names -->
     <string name="tab_text_1">Home</string>
     <string name="tab_text_2">Books</string>
-    <string name="tab_text_3">Library</string>
+    <string name="tab_text_3">Settings</string>
+
+    <!-- User messages -->
+    <string name="email_changed_successfully">Email changed successfully</string>
+    <string name="email_is_invalid">Email is invalid</string>
 
 
 
