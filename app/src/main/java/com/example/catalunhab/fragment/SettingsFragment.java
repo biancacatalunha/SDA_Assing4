@@ -1,5 +1,8 @@
-package com.example.catalunhab;
+package com.example.catalunhab.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -10,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 
 import com.example.sdaassign4_2019.R;
 
@@ -23,13 +28,13 @@ import com.example.sdaassign4_2019.R;
  *
  * References:
  * Settings - https://developer.android.com/guide/topics/ui/settings
- * OnPreferenceChangeListener - https://www.programcreek.com/java-api-examples/?class=android.preference.SwitchPreference&method=setOnPreferenceChangeListener
- * Check if an email is valid - https://stackoverflow.com/questions/22348212/android-check-if-an-email-address-is-valid-or-not
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private EditTextPreference email;
     private EditTextPreference name;
+    private SwitchPreference reset;
+    private String rootKeyGlobal;
     private static final String TAG = "SettingsFragment";
 
     /**
@@ -42,13 +47,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
      */
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
+        rootKeyGlobal = rootKey;
+        initiate();
+    }
+
+    /**
+     * I've extracted the initialization code because it is also being invoked when the user
+     * clears all preferences. It's how I'm reloading the page to display "Not set"
+     * in the summary of Email and Name.
+     *
+     * Reference
+     * How to reload a fragment - https://stackoverflow.com/questions/8003098/how-do-you-refresh-preferenceactivity-to-show-changes-in-the-settings
+     */
+    private void initiate() {
+        setPreferencesFromResource(R.xml.preferences, rootKeyGlobal);
 
         email = findPreference("email");
         name = findPreference("name");
+        reset = findPreference("reset");
 
         onBindListeners(email);
-        inputValidation();
+        onPreferenceChangedListeners();
     }
 
     /**
@@ -62,8 +81,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
      * When the name is changed, a success message is displayed and the value is updated in
      * SharedPreferences.
      *
+     * References:
+     * Check if an email is valid - https://stackoverflow.com/questions/22348212/android-check-if-an-email-address-is-valid-or-not
+     * OnPreferenceChangeListener - https://www.programcreek.com/java-api-examples/?class=android.preference.SwitchPreference&method=setOnPreferenceChangeListener
      */
-    private void inputValidation() {
+    private void onPreferenceChangedListeners() {
 
         email.setOnPreferenceChangeListener(
                 new Preference.OnPreferenceChangeListener() {
@@ -100,6 +122,49 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         return true;
                     }
                 });
+
+        reset.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                alertDialog();
+                return false;
+            }
+        });
+    }
+
+    /**
+     * This dialog is displayed when the user clicks on the clear data switch.
+     * It asks if the user is sure, if so, clears all SharedPreferences data and
+     * reloads the preferences fragment, in order to display the new value of the
+     * preferences on the screen.
+     *
+     * References:
+     * Dialogs - https://developer.android.com/guide/topics/ui/dialogs
+     */
+    private void alertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder
+                .setMessage(R.string.reset_dialog_message)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        pref.edit()
+                            .clear()
+                            .apply();
+
+                        initiate();
+                        Log.d(TAG, "Preferences reset");
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**

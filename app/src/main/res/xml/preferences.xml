@@ -1,5 +1,7 @@
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<PreferenceCategory android:title="@string/profile_info">
     <!-- "app:useSimpleSummaryProvider" Displays the current value for the key-->
     <EditTextPreference
         app:key="name"
@@ -10,5 +12,14 @@
         app:key="email"
         app:title="@string/email"
         app:useSimpleSummaryProvider="true"/>
+</PreferenceCategory>
+
+<PreferenceCategory android:title="@string/reset">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="reset"
+        android:summary="@string/clear_data_summary"
+        android:title="@string/clear_data"/>
+</PreferenceCategory>
 
 </PreferenceScreen>
