@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "11006074739",
+    "firebase_url": "https://sda-assign4.firebaseio.com",
+    "project_id": "sda-assign4",
+    "storage_bucket": "sda-assign4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11006074739:android:16185125370e7c35966f06",
+        "android_client_info": {
+          "package_name": "com.example.catalunhab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "11006074739-krmdrj7us5g34gujjen58mn0nf6j3av2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.catalunhab",
+            "certificate_hash": "5da1058dffb325b7dc2aee1dedcd96e3fd325a50"
+          }
+        },
+        {
+          "client_id": "11006074739-l4h5bbdrq1jknklevlout9rrtb5klebr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf1wjYdVydZtY6_Q4ewqS0vPKJkuTzUeI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "11006074739-l4h5bbdrq1jknklevlout9rrtb5klebr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

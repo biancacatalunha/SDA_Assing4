@@ -30,7 +30,7 @@ import com.example.sdaassign4_2019.R;
 
 
 /**
- * DCU - SDA - Assignment 3
+ * DCU - SDA - Assignment 4
  *
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
@@ -38,7 +38,7 @@ import com.example.sdaassign4_2019.R;
  * Defined constants for the tabs so the switch is more readable
  *
  * @author Bianca Catalunha <bianca.catalunha2@mail.dcu.ie>
- * @since December 2019
+ * @since January 2020
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 

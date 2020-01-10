@@ -18,6 +18,8 @@ import androidx.preference.SwitchPreference;
 
 import com.example.sdaassign4_2019.R;
 
+import java.util.Objects;
+
 /**
  * DCU - SDA - Assignment 4
  *
@@ -149,7 +151,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()));
                         pref.edit()
                             .clear()
                             .apply();
