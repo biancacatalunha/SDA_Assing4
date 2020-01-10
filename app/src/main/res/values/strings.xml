@@ -9,7 +9,14 @@
     <string name="reset">Reset</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
+    <string name="create_account">Create Account</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="sign_in">Sign In</string>
+    <string name="desc_firebase_lockup">Firebase logo and name</string>
+    <string name="emailpassword_title_text">Email and Password</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="disconnect">Disconnect</string>
 
     <!-- Tab names -->
     <string name="tab_text_1">Home</string>
@@ -20,6 +27,8 @@
     <string name="email_changed_successfully">Email changed successfully</string>
     <string name="name_changed_successfully">Name changed successfully</string>
     <string name="email_is_invalid">Email is invalid</string>
+    <string name="auth_failed">Authentication failed</string>
+
 
     <!-- Summary -->
     <string name="clear_data_summary">Clears all preferences on this screen</string>
@@ -27,6 +36,17 @@
     <!-- Dialog messages -->
     <string name="reset_dialog_message">Are you sure you want to reset your profile information?</string>
 
+    <!-- Auth -->
+    <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
+    <string name="firebase_status_fmt">Firebase UID: %s</string>
+    <string name="google_title_text">Google Sign In</string>
+    <string name="google_status_fmt">Google User: %s</string>
+
+
+
+    <!-- Hints -->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
