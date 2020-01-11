@@ -43,16 +43,15 @@ import com.example.sdaassign4_2019.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_2, R.string.tab_text_3};
     private static final String TAG = "SectionsPagerAdapter";
 
-    private static final int HOME = 0;
-    private static final int BOOKS = 1;
-    private static final int SETTINGS = 2;
+    private static final int BOOKS = 0;
+    private static final int SETTINGS = 1;
 
     private final Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
     }
@@ -65,9 +64,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case HOME:
-                Log.d(TAG, "Home tab clicked");
-                return new Welcome();
             case BOOKS:
                 Log.d(TAG, "Books tab clicked");
                 return new BookList();
@@ -97,6 +93,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 }

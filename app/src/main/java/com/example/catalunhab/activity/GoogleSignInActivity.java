@@ -25,7 +25,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.catalunhab.MainActivity;
-import com.example.catalunhab.Welcome;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -94,12 +93,12 @@ public class GoogleSignInActivity extends BaseActivity implements View.OnClickLi
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(MainActivity);
-        } else {
+//        if (currentUser != null) {
+//            Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
+//            startActivity(MainActivity);
+//        } else {
             updateUI(currentUser);
-        }
+//        }
     }
     // [END on_start_check_user]
 

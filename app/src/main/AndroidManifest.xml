@@ -14,8 +14,9 @@
 
         <activity android:name="com.example.catalunhab.CheckOut"/>
         <activity android:name="com.example.catalunhab.MainActivity"/>
+        <activity android:name="com.example.catalunhab.activity.BaseActivity" />
 
-        <activity android:name="com.example.catalunhab.activity.GoogleSignInActivity">
+        <activity android:name="com.example.catalunhab.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
