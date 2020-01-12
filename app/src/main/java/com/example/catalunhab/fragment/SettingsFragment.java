@@ -77,6 +77,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         id = findPreference("id");
         signOut = findPreference("signOut");
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getContext()));
+        String idValue = pref.getString("id", null);
+        id.setSummary(idValue);
+
         onBindListeners(email);
         onPreferenceChangedListeners();
     }
@@ -161,6 +165,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
+    //todo put this method in loginActivity
     private void signOut() {
         Log.d(TAG, "Sign Out called");
 

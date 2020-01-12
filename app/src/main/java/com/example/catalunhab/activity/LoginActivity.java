@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     /**
      * Gets the result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...)
-     * If the sign in was successful, uthenticate with Firebase
+     * If the sign in was successful, authenticate with Firebase
      *
      * @param requestCode The integer request code originally supplied to
      *                    startActivityForResult(), allowing you to identify who this
@@ -125,7 +125,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
 
-                            addUserInfoToSharedpreferences();
+                            addUserInfoToSharedPreferences();
 
                             Intent MainActivity = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);
                             startActivity(MainActivity);
@@ -139,13 +139,27 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 });
     }
 
-    private void addUserInfoToSharedpreferences() {
+    /**
+     * Adds Google auth user information to SharedPreferences if SharedPreferences
+     * info is null or not set
+     */
+    private void addUserInfoToSharedPreferences() {
         FirebaseUser user = mAuth.getCurrentUser();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString("name", Objects.requireNonNull(user).getDisplayName());
-        editor.putString("email", user.getEmail());
-        editor.putString("id", user.getUid());
+
+        String name = pref.getString("name", null);
+        String email = pref.getString("email", null);
+
+        if(name == null || name.equals("Not set")) {
+            editor.putString("name", Objects.requireNonNull(user).getDisplayName());
+        }
+
+        if(email == null || email.equals("Not set")) {
+            editor.putString("email", Objects.requireNonNull(user).getEmail());
+        }
+
+        editor.putString("id", Objects.requireNonNull(user).getUid());
 
         editor.apply();
 
