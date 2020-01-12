@@ -4,6 +4,7 @@
     <!-- Labels -->
     <string name="name">Name</string>
     <string name="email">Email</string>
+    <string name="id">ID</string>
     <string name="clear_data">Clear data</string>
     <string name="profile_info">Profile info</string>
     <string name="reset">Reset</string>

@@ -3,6 +3,11 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <PreferenceCategory android:title="@string/profile_info">
     <!-- "app:useSimpleSummaryProvider" Displays the current value for the key-->
+
+    <Preference
+        app:key="id"
+        app:title="@string/id"/>
+
     <EditTextPreference
         app:key="name"
         app:title="@string/name"
@@ -14,9 +19,15 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         app:useSimpleSummaryProvider="true"/>
 </PreferenceCategory>
 
+<PreferenceCategory android:title="@string/sign_out">
+    <Preference
+        app:key="signout"
+        app:title="@string/sign_out"/>
+
+</PreferenceCategory>
+
 <PreferenceCategory android:title="@string/reset">
-    <SwitchPreference
-        android:defaultValue="false"
+    <Preference
         android:key="reset"
         android:summary="@string/clear_data_summary"
         android:title="@string/clear_data"/>

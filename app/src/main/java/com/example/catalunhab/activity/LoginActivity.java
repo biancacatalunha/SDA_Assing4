@@ -1,11 +1,13 @@
 package com.example.catalunhab.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import com.example.sdaassign4_2019.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -19,15 +21,18 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Objects;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
 
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
+    public static FirebaseAuth mAuth;
+    public static GoogleSignInClient mGoogleSignInClient;
 
     /**
      * Sets the progress bar on the base activity
@@ -120,6 +125,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
 
+                            addUserInfoToSharedpreferences();
+
                             Intent MainActivity = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);
                             startActivity(MainActivity);
                         } else {
@@ -130,5 +137,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         hideProgressBar();
                     }
                 });
+    }
+
+    private void addUserInfoToSharedpreferences() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("name", Objects.requireNonNull(user).getDisplayName());
+        editor.putString("email", user.getEmail());
+        editor.putString("id", user.getUid());
+
+        editor.apply();
+
+        Log.d(TAG, "id is " + pref.getString("id", null));
     }
 }

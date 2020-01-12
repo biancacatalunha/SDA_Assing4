@@ -16,6 +16,7 @@ import java.util.Calendar;
 
 public class CheckOut extends AppCompatActivity {
 
+    //todo add note on check out "Book will be reserved for 24 hours blabla"
     TextView mDisplaySummary;
     Calendar mDateAndTime = Calendar.getInstance();
 

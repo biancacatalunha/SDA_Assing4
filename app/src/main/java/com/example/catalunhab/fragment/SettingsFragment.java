@@ -2,6 +2,7 @@ package com.example.catalunhab.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,11 +15,15 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
 
 import com.example.sdaassign4_2019.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Objects;
+
+import static com.example.catalunhab.activity.LoginActivity.mAuth;
+import static com.example.catalunhab.activity.LoginActivity.mGoogleSignInClient;
 
 /**
  * DCU - SDA - Assignment 4
@@ -35,7 +40,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private EditTextPreference email;
     private EditTextPreference name;
-    private SwitchPreference reset;
+    private Preference reset;
+    private Preference signOut;
+    private Preference id;
     private String rootKeyGlobal;
     private static final String TAG = "SettingsFragment";
 
@@ -67,6 +74,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         email = findPreference("email");
         name = findPreference("name");
         reset = findPreference("reset");
+        id = findPreference("id");
+        signOut = findPreference("signOut");
 
         onBindListeners(email);
         onPreferenceChangedListeners();
@@ -125,13 +134,52 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                 });
 
-        reset.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        reset.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d(TAG, "Reset clicked");
                 alertDialog();
                 return false;
             }
         });
+
+        id.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d(TAG, "Id clicked");
+                return false;
+            }
+        });
+
+        signOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d(TAG, "SignOut clicked");
+                signOut();
+                return false;
+            }
+        });
+    }
+
+    private void signOut() {
+        Log.d(TAG, "Sign Out called");
+
+        mAuth.signOut();
+
+        mGoogleSignInClient.signOut().addOnCompleteListener(Objects.requireNonNull(getActivity()),
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast toast = Toast.makeText(getContext(), "signed out", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                        Intent MainActivity = new Intent(getContext(), com.example.catalunhab.activity.LoginActivity.class);
+                        startActivity(MainActivity);
+
+                        Log.d(TAG, "Signed Out");
+                    }
+                });
+
     }
 
     /**
