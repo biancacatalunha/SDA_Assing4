@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.catalunhab.fragment.BookListFragment;
 import com.example.catalunhab.fragment.SettingsFragment;
 import com.example.sdaassign4_2019.R;
 
@@ -66,7 +67,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case BOOKS:
                 Log.d(TAG, "Books tab clicked");
-                return new BookList();
+                return new BookListFragment();
             case SETTINGS:
                 Log.d(TAG, "Settings tab clicked");
                 return new SettingsFragment();
