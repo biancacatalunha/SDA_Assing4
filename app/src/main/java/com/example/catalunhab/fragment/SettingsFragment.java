@@ -43,6 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private Preference reset;
     private Preference signOut;
     private Preference id;
+    private Preference admin;
     private String rootKeyGlobal;
     private static final String TAG = "SettingsFragment";
 
@@ -76,6 +77,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         reset = findPreference("reset");
         id = findPreference("id");
         signOut = findPreference("signOut");
+        admin = findPreference("admin");
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getContext()));
         String idValue = pref.getString("id", null);
@@ -163,6 +165,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
+
+        admin.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d(TAG, "Admin clicked");
+                adminAlertDialog();
+                return false;
+            }
+        });
     }
 
     //todo put this method in loginActivity
@@ -206,14 +217,49 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()));
                         pref.edit()
-                            .clear()
-                            .apply();
+                                .clear()
+                                .apply();
 
                         initiate();
                         Log.d(TAG, "Preferences reset");
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Reference:
+     * Input text dialog - https://stackoverflow.com/questions/10903754/input-text-dialog-android
+     */
+    private void adminAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        builder
+                .setView(input)
+                .setMessage(R.string.password)
+                .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(input.getText().toString().equals("firebaseRules")) {
+                            Intent intent = new Intent(getContext(), com.example.catalunhab.activity.UploadDataActivity.class);
+                            startActivity(intent);
+
+                            Log.d(TAG, "Admin login successful");
+                        } else {
+                            Log.d(TAG, "Admin login failed");
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {}
                 });

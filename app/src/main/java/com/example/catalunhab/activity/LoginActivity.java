@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
+import com.example.catalunhab.type.User;
 import com.example.sdaassign4_2019.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -23,9 +24,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
+
+/**
+ * References:
+ * Firebase - https://firebase.google.com/docs/firestore/quickstart
+ */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
@@ -33,6 +41,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     public static FirebaseAuth mAuth;
     public static GoogleSignInClient mGoogleSignInClient;
+    public static User userInfo;
 
     /**
      * Sets the progress bar on the base activity
@@ -114,7 +123,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param acct GoogleSignInAccount details
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         showProgressBar();
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -125,7 +133,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
 
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            userInfo = new User(Objects.requireNonNull(user).getUid(), user.getDisplayName(), user.getEmail());
+
                             addUserInfoToSharedPreferences();
+
+                            writeToDatabase();
 
                             Intent MainActivity = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);
                             startActivity(MainActivity);
@@ -141,28 +154,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     /**
      * Adds Google auth user information to SharedPreferences if SharedPreferences
-     * info is null or not set
+     * info is null
+     * If the user cleared all data, it will remain "Not Set"
      */
     private void addUserInfoToSharedPreferences() {
-        FirebaseUser user = mAuth.getCurrentUser();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
 
         String name = pref.getString("name", null);
         String email = pref.getString("email", null);
+        String id = pref.getString("id", null);
 
-        if(name == null || name.equals("Not set")) {
-            editor.putString("name", Objects.requireNonNull(user).getDisplayName());
+        if(name == null) {
+            editor.putString("name", userInfo.getName());
+            Log.d(TAG, "Name: " + userInfo.getName() + " added to SharedPreferences");
         }
 
-        if(email == null || email.equals("Not set")) {
-            editor.putString("email", Objects.requireNonNull(user).getEmail());
+        if(email == null) {
+            editor.putString("email", userInfo.getEmail());
+            Log.d(TAG, "Email: " + userInfo.getEmail() + " added to SharedPreferences");
         }
 
-        editor.putString("id", Objects.requireNonNull(user).getUid());
+        if(id == null) {
+            editor.putString("id", userInfo.getId());
+            Log.d(TAG, "Id: " + userInfo.getId() + " added to SharedPreferences");
+        }
 
         editor.apply();
+    }
 
-        Log.d(TAG, "id is " + pref.getString("id", null));
+    private void writeToDatabase() {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(userInfo.getId()).setValue(userInfo);
+        Log.d(TAG, "Wrote user info to database");
     }
 }
