@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.catalunhab;
+package com.example.catalunhab.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -52,7 +52,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private final Context mContext;
 
-    SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
     }

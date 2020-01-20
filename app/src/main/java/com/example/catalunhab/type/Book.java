@@ -1,12 +1,14 @@
 package com.example.catalunhab.type;
 
+import android.net.Uri;
+
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Book {
 
     private String id;
-    private String image;
+    private Uri image;
     private String title;
     private String author;
     private boolean available;
@@ -16,18 +18,19 @@ public class Book {
      */
     public Book()  {}
 
-    public Book(String id, String title, String author, boolean available) {
+    public Book(String id, String title, String author, boolean available, Uri image) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.available = available;
+        this.image = image;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getImage() {
+    public Uri getImage() {
         return image;
     }
 
@@ -41,6 +44,26 @@ public class Book {
 
     public boolean isAvailable() {
         return available;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setImage(Uri image) {
+        this.image = image;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     @Override

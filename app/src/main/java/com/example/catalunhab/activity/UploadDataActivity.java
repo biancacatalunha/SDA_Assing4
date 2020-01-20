@@ -1,6 +1,22 @@
+/*
+ * Copyright 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.catalunhab.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -8,14 +24,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.catalunhab.type.Book;
 import com.example.sdaassign4_2019.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
- * Class to upload book objects to firebase database
+ * DCU - SDA - Assignment 4
+ *
+ * Helper class to upload book objects to Firebase database
+ *
+ * @author Bianca Catalunha <bianca.catalunha2@mail.dcu.ie>
+ * @since January 2020
+ *
+ *
  */
+//todo get reference
 public class UploadDataActivity extends AppCompatActivity {
 
     private static final String TAG = "UploadDataActivity";
@@ -27,21 +52,37 @@ public class UploadDataActivity extends AppCompatActivity {
         uploadBooks();
     }
 
+    /**
+     * Gets a list of authors and titles from the string resources,
+     * Iterates through the list creating Book objects and uploading
+     * them to firebase
+     */
     private void uploadBooks() {
-        ArrayList<Book> books = new ArrayList<>();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://sda-assign4.appspot.com/book_covers");
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
         String[] titles = getResources().getStringArray(R.array.book_titles);
         String[] authors = getResources().getStringArray(R.array.book_authors);
 
         if(titles.length == authors.length) {
             for(int x = 0; x < titles.length; x++) {
-                Book book = new Book(String.valueOf(x+1), String.valueOf(titles[x]), String.valueOf(authors[x]), true);
-                books.add(book);
-                Log.d(TAG, "Book added to arrayList: " + book.toString());
-            }
+                final Book book = new Book();
 
-            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                StorageReference imageRef = storageRef.child("book_covers/sku1000" + (x + 1) + ".jpg");
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        book.setImage(uri);
+                    }
+                });
 
-            for(Book book: books) {
+                //todo leave image as string
+                book.setId(String.valueOf(x+1));
+                book.setTitle(String.valueOf(titles[x]));
+                book.setAuthor(String.valueOf(authors[x]));
+                book.setAvailable(true);
+
                 mDatabase.child("books").child(book.getId()).setValue(book);
                 Log.d(TAG, "Book added to database: " + book.toString());
             }

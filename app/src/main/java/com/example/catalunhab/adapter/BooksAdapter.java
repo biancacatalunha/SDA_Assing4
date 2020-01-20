@@ -28,10 +28,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.catalunhab.type.Book;
+import com.example.sdaassign4_2019.R;
 
 import java.util.ArrayList;
-import com.example.sdaassign4_2019.R;
 
 
 /**
@@ -116,12 +117,20 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
      */
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
+        String url = "https://firebasestorage.googleapis.com/v0/b/sda-assign4.appspot.com/o" + dataSet.get(position).getImage();
+
+        Log.d(TAG, "URL: " + url);
+
         holder.titleText.setText(dataSet.get(position).getTitle());
         holder.authorText.setText(dataSet.get(position).getAuthor());
+        Glide
+                .with(holder.imageItem.getContext())
+                .load(url)
+        .into(holder.imageItem);
     }
 
     /**
-     * @return the amount of products in the array
+     * @return the amount of books in the array
      */
     @Override
     public int getItemCount() {

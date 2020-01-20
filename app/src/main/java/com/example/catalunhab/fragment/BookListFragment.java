@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.catalunhab.fragment;
 
 
@@ -22,20 +37,38 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 /**
+ * DCU - SDA - Assignment 4
+ *
  * Images used are sourced from Public Domain Day 2019.
  * by Duke Law School's Center for the Study of the Public Domain
  * is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
  * A simple {@link Fragment} subclass.
- * @author Chris Coughlan
+ *
+ * @author Chris Coughlan and Bianca Catalunha
+ * @since January 2020
  */
 public class BookListFragment extends Fragment {
 
     private static final String TAG = "BookListFragment";
 
+    /**
+     * Required empty constructor
+     */
     public BookListFragment() {}
 
+    /**
+     * Inflates book list layout as a fragment
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return root view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
