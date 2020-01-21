@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
  *
  *
  */
-//todo get reference
 public class UploadDataActivity extends AppCompatActivity {
 
     private static final String TAG = "UploadDataActivity";
@@ -56,15 +56,20 @@ public class UploadDataActivity extends AppCompatActivity {
 
     /**
      * Gets a list of authors and titles from the string resources,
-     * Iterates through the list creating Book objects and uploading
-     * them to firebase
+     * Iterates through the list creating setting a new book object for each
+     * The image URI is obtained by calling getDownloadUrl on the storage reference
+     * with the name of the child and file
+     * Once the URI is retrieved, the object is uploaded to the firebase database
      */
     private void uploadBooks() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        String[] titles = getResources().getStringArray(R.array.book_titles);
-        String[] authors = getResources().getStringArray(R.array.book_authors);
+        final String[] titles = getResources().getStringArray(R.array.book_titles);
+        final String[] authors = getResources().getStringArray(R.array.book_authors);
+        final String bookStorageFolderName = getResources().getString(R.string.book_storage_folder_name);
+        final String bookNamePattern = getResources().getString(R.string.book_name_pattern);
+        final String jpgExtension = getResources().getString(R.string.jpg_extension);
+        final String booksLabel = getResources().getString(R.string.books);
 
         if(titles.length == authors.length) {
             for(int x = 0; x < titles.length; x++) {
@@ -75,17 +80,23 @@ public class UploadDataActivity extends AppCompatActivity {
                 book.setAuthor(String.valueOf(authors[x]));
                 book.setAvailable(true);
 
-                storageReference.child("book_covers/sku1000" + (x + 1) + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                storageReference.child(bookStorageFolderName + "/" + bookNamePattern + (x + 1) + jpgExtension)
+                        .getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         book.setImage(uri.toString());
-                        mDatabase.child("books").child(book.getId()).setValue(book);
+                        mDatabase.child(booksLabel).child(book.getId()).setValue(book);
+
                         Log.d(TAG, "Book added to database: " + book.toString());
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "Error getting URI ", e);
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.images_upload_error, Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 });
             }

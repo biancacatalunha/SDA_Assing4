@@ -203,7 +203,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast toast = Toast.makeText(getContext(), "signed out", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getContext(), R.string.signed_out, Toast.LENGTH_SHORT);
                         toast.show();
 
                         Intent MainActivity = new Intent(getContext(), com.example.catalunhab.activity.LoginActivity.class);
@@ -273,6 +273,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                             Log.d(TAG, "Admin login successful");
                         } else {
+                            Toast toast = Toast.makeText(getContext(), R.string.wrong_password, Toast.LENGTH_SHORT);
+                            toast.show();
                             Log.d(TAG, "Admin login failed");
                         }
                     }
