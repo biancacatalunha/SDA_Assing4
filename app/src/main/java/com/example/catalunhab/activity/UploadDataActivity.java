@@ -20,10 +20,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.catalunhab.type.Book;
 import com.example.sdaassign4_2019.R;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -58,9 +60,8 @@ public class UploadDataActivity extends AppCompatActivity {
      * them to firebase
      */
     private void uploadBooks() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://sda-assign4.appspot.com/book_covers");
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         String[] titles = getResources().getStringArray(R.array.book_titles);
         String[] authors = getResources().getStringArray(R.array.book_authors);
@@ -69,22 +70,24 @@ public class UploadDataActivity extends AppCompatActivity {
             for(int x = 0; x < titles.length; x++) {
                 final Book book = new Book();
 
-                StorageReference imageRef = storageRef.child("book_covers/sku1000" + (x + 1) + ".jpg");
-                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        book.setImage(uri);
-                    }
-                });
-
-                //todo leave image as string
                 book.setId(String.valueOf(x+1));
                 book.setTitle(String.valueOf(titles[x]));
                 book.setAuthor(String.valueOf(authors[x]));
                 book.setAvailable(true);
 
-                mDatabase.child("books").child(book.getId()).setValue(book);
-                Log.d(TAG, "Book added to database: " + book.toString());
+                storageReference.child("book_covers/sku1000" + (x + 1) + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        book.setImage(uri.toString());
+                        mDatabase.child("books").child(book.getId()).setValue(book);
+                        Log.d(TAG, "Book added to database: " + book.toString());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Error getting URI ", e);
+                    }
+                });
             }
 
             Intent intent = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);

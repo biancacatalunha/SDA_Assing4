@@ -131,6 +131,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 assert account != null;
                 firebaseAuthWithGoogle(account);
+
+                Log.w(TAG, "Google sign in success");
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
             }

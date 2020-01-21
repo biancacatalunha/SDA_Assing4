@@ -84,6 +84,7 @@ public class BookListFragment extends Fragment {
      * Retrieve objects from db - https://riptutorial.com/android/example/25872/retrieving-data-from-firebase
      */
     private void getBooksFromDatabase() {
+
         FirebaseDatabase.getInstance().getReference().child("books")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

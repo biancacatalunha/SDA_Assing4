@@ -256,6 +256,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
      */
     private void adminAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final String pass = getResources().getString(R.string.admin_password);
 
         final EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -266,7 +267,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(input.getText().toString().equals(R.string.admin_password)) {
+                        if(input.getText().toString().equals(pass)) {
                             Intent intent = new Intent(getContext(), com.example.catalunhab.activity.UploadDataActivity.class);
                             startActivity(intent);
 

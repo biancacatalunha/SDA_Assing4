@@ -15,6 +15,7 @@
  */
 package com.example.catalunhab.adapter;
 
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,15 +118,16 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
      */
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        String url = "https://firebasestorage.googleapis.com/v0/b/sda-assign4.appspot.com/o" + dataSet.get(position).getImage();
+        //todo add try catch here
+        Uri uri = Uri.parse(dataSet.get(position).getImage());
 
-        Log.d(TAG, "URL: " + url);
+        Log.d(TAG, "URI: " + uri);
 
         holder.titleText.setText(dataSet.get(position).getTitle());
         holder.authorText.setText(dataSet.get(position).getAuthor());
         Glide
                 .with(holder.imageItem.getContext())
-                .load(url)
+                .load(uri)
         .into(holder.imageItem);
     }
 
