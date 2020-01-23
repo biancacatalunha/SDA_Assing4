@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+
 import com.example.sdaassign4_2019.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
 import java.util.Calendar;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Show a date picker when the select date button is clicked
+ * Create a new date picker if it is not yet created or initialize it otherwise
  * Reference:
  * Code adapted from - https://github.com/wdullaer/MaterialDateTimePicker
  */
@@ -36,24 +39,9 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
 
         dateButton.setOnClickListener(v -> {
             Calendar now = Calendar.getInstance();
-            new android.app.DatePickerDialog(
-                    ReservationActivity.this,
-                    (view1, year, month, dayOfMonth) -> Log.d(TAG, "Got clicked"),
-                    now.get(Calendar.YEAR),
-                    now.get(Calendar.MONTH),
-                    now.get(Calendar.DAY_OF_MONTH)
-            ).show();
-        });
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.MONTH, 3);
 
-        // Show a datepicker when the dateButton is clicked
-        dateButton.setOnClickListener(v -> {
-            Calendar now = Calendar.getInstance();
-
-            /*
-            It is recommended to always create a new instance whenever you need to show a Dialog.
-            The sample app is reusing them because it is useful when looking for regressions
-            during testing
-             */
             if (dpd == null) {
                 dpd = DatePickerDialog.newInstance(
                         ReservationActivity.this,
@@ -70,13 +58,22 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
                 );
             }
 
-            Calendar[] days = new Calendar[13];
-            for (int i = -6; i < 7; i++) {
-                Calendar day = Calendar.getInstance();
-                day.add(Calendar.DAY_OF_MONTH, i * 2);
-                days[i + 6] = day;
-            }
-            dpd.setSelectableDays(days);
+//            Calendar[] days = new Calendar[13];
+//            for (int i = -6; i < 7; i++) {
+//                Calendar day = Calendar.getInstance();
+//                day.add(Calendar.DAY_OF_MONTH, i * 2);
+//                days[i + 6] = day;
+//            }
+//            dpd.setSelectableDays(days);
+//            dpd.setDisabledDays();
+
+            dpd.setOkText(R.string.ok);
+            dpd.setOkColor(getColor(R.color.colorSurface));
+            dpd.setCancelText(R.string.cancel);
+            dpd.setCancelColor(getColor(R.color.colorSurface));
+            dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+            dpd.setMinDate(now);
+            dpd.setMaxDate(maxDate);
 
             dpd.setOnCancelListener(dialog -> {
                 Log.d(TAG, "Dialog was cancelled");
@@ -99,6 +96,15 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
         if(dpd != null) dpd.setOnDateSetListener(this);
     }
 
+    /**
+     * When a date is picked, displays it to the user
+     *
+     * @param view        The view associated with this listener.
+     * @param year        The year that was set.
+     * @param monthOfYear The month that was set (0-11) for compatibility
+     *                    with {@link java.util.Calendar}.
+     * @param dayOfMonth  The day of the month that was set.
+     */
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = "You picked the following date: "+dayOfMonth+"/"+(++monthOfYear)+"/"+year;
