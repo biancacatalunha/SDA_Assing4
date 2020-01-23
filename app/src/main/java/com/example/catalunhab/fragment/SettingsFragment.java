@@ -16,7 +16,6 @@
 package com.example.catalunhab.fragment;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,15 +24,12 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.example.sdaassign4_2019.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.Objects;
 
@@ -120,76 +116,58 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void onPreferenceChangedListeners() {
 
         email.setOnPreferenceChangeListener(
-                new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Log.d(TAG, "Email onPreferenceChange got called. New value: " + newValue);
+                (preference, newValue) -> {
+                    Log.d(TAG, "Email onPreferenceChange got called. New value: " + newValue);
 
-                        if(android.util.Patterns.EMAIL_ADDRESS.matcher(newValue.toString()).matches()) {
-                            Toast toast = Toast.makeText(getContext(), R.string.email_changed_successfully, Toast.LENGTH_SHORT);
-                            toast.show();
+                    if(android.util.Patterns.EMAIL_ADDRESS.matcher(newValue.toString()).matches()) {
+                        Toast toast = Toast.makeText(getContext(), R.string.email_changed_successfully, Toast.LENGTH_SHORT);
+                        toast.show();
 
-                            Log.d(TAG, "Email is valid");
-                            return true;
-                        } else {
-                            Toast toast = Toast.makeText(getContext(), R.string.email_is_invalid, Toast.LENGTH_SHORT);
-                            toast.show();
+                        Log.d(TAG, "Email is valid");
+                        return true;
+                    } else {
+                        Toast toast = Toast.makeText(getContext(), R.string.email_is_invalid, Toast.LENGTH_SHORT);
+                        toast.show();
 
-                            Log.d(TAG, "Email is invalid");
-                            return false;
-                        }
+                        Log.d(TAG, "Email is invalid");
+                        return false;
                     }
                 });
 
         name.setOnPreferenceChangeListener(
-                new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Log.d(TAG, "Name onPreferenceChange got called. New value: " + newValue);
+                (preference, newValue) -> {
+                    Log.d(TAG, "Name onPreferenceChange got called. New value: " + newValue);
 
-                        Toast toast = Toast.makeText(getContext(), R.string.name_changed_successfully, Toast.LENGTH_SHORT);
-                        toast.show();
+                    Toast toast = Toast.makeText(getContext(), R.string.name_changed_successfully, Toast.LENGTH_SHORT);
+                    toast.show();
 
-                        Log.d(TAG, "Name is changed successfully");
-                        return true;
-                    }
+                    Log.d(TAG, "Name is changed successfully");
+                    return true;
                 });
 
-        reset.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(TAG, "Reset clicked");
-                alertDialog();
-                return false;
-            }
+        reset.setOnPreferenceClickListener(preference -> {
+            Log.d(TAG, "Reset clicked");
+            alertDialog();
+            return false;
         });
 
-        id.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(TAG, "Id clicked");
-                Toast toast = Toast.makeText(getContext(), R.string.id_cannot_be_changed, Toast.LENGTH_SHORT);
-                toast.show();
-                return false;
-            }
+        id.setOnPreferenceClickListener(preference -> {
+            Log.d(TAG, "Id clicked");
+            Toast toast = Toast.makeText(getContext(), R.string.id_cannot_be_changed, Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
         });
 
-        signOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(TAG, "SignOut clicked");
-                signOut();
-                return false;
-            }
+        signOut.setOnPreferenceClickListener(preference -> {
+            Log.d(TAG, "SignOut clicked");
+            signOut();
+            return false;
         });
 
-        admin.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(TAG, "Admin clicked");
-                adminAlertDialog();
-                return false;
-            }
+        admin.setOnPreferenceClickListener(preference -> {
+            Log.d(TAG, "Admin clicked");
+            adminAlertDialog();
+            return false;
         });
     }
 
@@ -200,17 +178,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         mAuth.signOut();
 
         mGoogleSignInClient.signOut().addOnCompleteListener(Objects.requireNonNull(getActivity()),
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast toast = Toast.makeText(getContext(), R.string.signed_out, Toast.LENGTH_SHORT);
-                        toast.show();
+                task -> {
+                    Toast toast = Toast.makeText(getContext(), R.string.signed_out, Toast.LENGTH_SHORT);
+                    toast.show();
 
-                        Intent MainActivity = new Intent(getContext(), com.example.catalunhab.activity.LoginActivity.class);
-                        startActivity(MainActivity);
+                    Intent MainActivity = new Intent(getContext(), com.example.catalunhab.activity.LoginActivity.class);
+                    startActivity(MainActivity);
 
-                        Log.d(TAG, "Signed Out");
-                    }
+                    Log.d(TAG, "Signed Out");
                 });
 
     }
@@ -229,22 +204,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         builder
                 .setMessage(R.string.reset_dialog_message)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()));
-                        pref.edit()
-                                .clear()
-                                .apply();
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()));
+                    pref.edit()
+                            .clear()
+                            .apply();
 
-                        initiate();
-                        Log.d(TAG, "Preferences reset");
-                    }
+                    initiate();
+                    Log.d(TAG, "Preferences reset");
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                });
+                .setNegativeButton(R.string.no, (dialog, which) -> {});
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -264,25 +233,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         builder
                 .setView(input)
                 .setMessage(R.string.password)
-                .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(input.getText().toString().equals(pass)) {
-                            Intent intent = new Intent(getContext(), com.example.catalunhab.activity.UploadDataActivity.class);
-                            startActivity(intent);
+                .setPositiveButton(R.string.login, (dialog, which) -> {
+                    if(input.getText().toString().equals(pass)) {
+                        Intent intent = new Intent(getContext(), com.example.catalunhab.activity.UploadDataActivity.class);
+                        startActivity(intent);
 
-                            Log.d(TAG, "Admin login successful");
-                        } else {
-                            Toast toast = Toast.makeText(getContext(), R.string.wrong_password, Toast.LENGTH_SHORT);
-                            toast.show();
-                            Log.d(TAG, "Admin login failed");
-                        }
+                        Log.d(TAG, "Admin login successful");
+                    } else {
+                        Toast toast = Toast.makeText(getContext(), R.string.wrong_password, Toast.LENGTH_SHORT);
+                        toast.show();
+                        Log.d(TAG, "Admin login failed");
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                });
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {});
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -296,12 +259,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void onBindListeners(EditTextPreference email) {
         if (email != null) {
             email.setOnBindEditTextListener(
-                    new EditTextPreference.OnBindEditTextListener() {
-                        @Override
-                        public void onBindEditText(@NonNull EditText editText) {
-                            editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                            Log.d(TAG, "onBindListener got called");
-                        }
+                    editText -> {
+                        editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                        Log.d(TAG, "onBindListener got called");
                     });
         }
     }

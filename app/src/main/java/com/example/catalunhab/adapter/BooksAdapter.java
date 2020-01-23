@@ -15,6 +15,7 @@
  */
 package com.example.catalunhab.adapter;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -96,14 +97,17 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_list_item, parent, false);
         ImageView bookImage = v.findViewById(R.id.bookImage);
         final TextView bookTitle = v.findViewById(R.id.bookTitle);
+        Button reserve = v.findViewById(R.id.out_button);
 
-        bookImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast toast = Toast.makeText(v.getContext(), bookTitle.getText().toString(), Toast.LENGTH_SHORT);
-                toast.show();
-                Log.d(TAG, "Book clicked: " + bookTitle.getText().toString());
-            }
+        reserve.setOnClickListener(v1 -> {
+            Intent intent = new Intent(v1.getContext(), com.example.catalunhab.activity.ReservationActivity.class);
+            v1.getContext().startActivity(intent);
+        });
+
+        bookImage.setOnClickListener(v12 -> {
+            Toast toast = Toast.makeText(v12.getContext(), bookTitle.getText().toString(), Toast.LENGTH_SHORT);
+            toast.show();
+            Log.d(TAG, "Book clicked: " + bookTitle.getText().toString());
         });
         Log.d(TAG, "Book View holder created");
 
@@ -125,10 +129,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         holder.titleText.setText(dataSet.get(position).getTitle());
         holder.authorText.setText(dataSet.get(position).getAuthor());
-        Glide
-                .with(holder.imageItem.getContext())
-                .load(uri)
-        .into(holder.imageItem);
+        Glide.with(holder.imageItem.getContext()).load(uri).into(holder.imageItem);
     }
 
     /**
