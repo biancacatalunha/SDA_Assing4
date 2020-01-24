@@ -1,5 +1,6 @@
 package com.example.catalunhab.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -7,10 +8,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.catalunhab.adapter.BooksAdapter;
 import com.example.sdaassign4_2019.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Show a date picker when the select date button is clicked
@@ -22,7 +25,14 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
 
     private static final String TAG = "ReservationActivity";
     private DatePickerDialog dpd;
-    private TextView orderSummary;
+    Calendar now;
+    Button fromButton;
+    Button toButton;
+    Button confirmButton;
+    TextView fromDate;
+    TextView toDate;
+    TextView reservationSummary;
+    TextView reservationIntro;
 
     /**
      * Required empty public constructor
@@ -32,31 +42,28 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_out);
+        setContentView(R.layout.reservation_activity);
 
-        Button dateButton = findViewById(R.id.date);
-        orderSummary = findViewById(R.id.orderSummary);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        dateButton.setOnClickListener(v -> {
-            Calendar now = Calendar.getInstance();
-            Calendar maxDate = Calendar.getInstance();
-            maxDate.add(Calendar.MONTH, 3);
+        Intent intent = getIntent();
 
-            if (dpd == null) {
-                dpd = DatePickerDialog.newInstance(
-                        ReservationActivity.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-            } else {
-                dpd.initialize(
-                        ReservationActivity.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-            }
+        fromButton = findViewById(R.id.fromButton);
+        toButton = findViewById(R.id.toButton);
+        confirmButton = findViewById(R.id.confirmButton);
+        fromDate = findViewById(R.id.fromDate);
+        toDate = findViewById(R.id.toDate);
+        reservationSummary = findViewById(R.id.reservationSummary);
+        reservationIntro = findViewById(R.id.reservationIntro);
+
+        reservationIntro.setText(String.format("%s %s", getString(R.string.reservation_intro), intent.getStringExtra(BooksAdapter.BOOK_TITLE)));
+
+        setOnClickListeners();
+    }
+
+    public void setOnClickListeners() {
+        fromButton.setOnClickListener(v -> {
+
 
 //            Calendar[] days = new Calendar[13];
 //            for (int i = -6; i < 7; i++) {
@@ -66,12 +73,9 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
 //            }
 //            dpd.setSelectableDays(days);
 //            dpd.setDisabledDays();
-
-            dpd.setOkText(R.string.ok);
-            dpd.setOkColor(getColor(R.color.colorSurface));
-            dpd.setCancelText(R.string.cancel);
-            dpd.setCancelColor(getColor(R.color.colorSurface));
-            dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+            dpd = getDatePicker();
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.MONTH, 3);
             dpd.setMinDate(now);
             dpd.setMaxDate(maxDate);
 
@@ -81,6 +85,35 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
             });
             dpd.show(getSupportFragmentManager(), TAG);
         });
+    }
+
+    private DatePickerDialog getDatePicker() {
+        now = Calendar.getInstance();
+
+        if (dpd == null) {
+            dpd = DatePickerDialog.newInstance(
+                    ReservationActivity.this,
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH)
+            );
+        } else {
+            dpd.initialize(
+                    ReservationActivity.this,
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH)
+            );
+        }
+
+        dpd.setOkText(R.string.ok);
+        dpd.setOkColor(getColor(R.color.colorSurface));
+        dpd.setCancelText(R.string.cancel);
+        dpd.setCancelColor(getColor(R.color.colorSurface));
+        dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+        dpd.autoDismiss(true);
+
+        return dpd;
     }
 
     @Override
@@ -108,7 +141,7 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = "You picked the following date: "+dayOfMonth+"/"+(++monthOfYear)+"/"+year;
-        orderSummary.setText(date);
+        fromDate.setText(date);
         dpd = null;
     }
 }

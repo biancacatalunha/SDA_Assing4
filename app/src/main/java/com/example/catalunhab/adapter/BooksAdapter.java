@@ -50,6 +50,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     private ArrayList<Book> dataSet;
 
     private static final String TAG = "ProductsAdapter";
+    public static final String BOOK_TITLE = "BookTitle";
 
     /**
      * OnCreateViewHolder this method is called creating a view for each object
@@ -101,6 +102,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         reserve.setOnClickListener(v1 -> {
             Intent intent = new Intent(v1.getContext(), com.example.catalunhab.activity.ReservationActivity.class);
+            intent.putExtra(BOOK_TITLE, bookTitle.getText());
             v1.getContext().startActivity(intent);
         });
 

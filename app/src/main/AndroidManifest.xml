@@ -11,8 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.catalunhab.MainActivity" />
         <activity android:name="com.example.catalunhab.activity.UploadDataActivity"/>
-        <activity android:name="com.example.catalunhab.CheckOut" />
         <activity android:name="com.example.catalunhab.MainActivity" />
         <activity android:name="com.example.catalunhab.activity.BaseActivity" />
         <activity android:name="com.example.catalunhab.activity.LoginActivity">
