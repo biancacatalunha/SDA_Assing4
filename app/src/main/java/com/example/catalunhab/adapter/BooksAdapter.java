@@ -51,6 +51,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
     private static final String TAG = "ProductsAdapter";
     public static final String BOOK_TITLE = "BookTitle";
+    public static final String BOOK_ID = "BookId";
 
     /**
      * OnCreateViewHolder this method is called creating a view for each object
@@ -59,6 +60,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         ImageView imageItem;
         TextView authorText;
         TextView titleText;
+        TextView bookId;
         Button checkOut;
         RelativeLayout itemParentLayout;
 
@@ -67,6 +69,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
             imageItem = itemView.findViewById(R.id.bookImage);
             authorText = itemView.findViewById(R.id.authorText);
             titleText = itemView.findViewById(R.id.bookTitle);
+            bookId = itemView.findViewById(R.id.bookId);
             checkOut = itemView.findViewById(R.id.out_button);
             itemParentLayout = itemView.findViewById(R.id.listItemLayout);
         }
@@ -97,12 +100,14 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_list_item, parent, false);
         ImageView bookImage = v.findViewById(R.id.bookImage);
-        final TextView bookTitle = v.findViewById(R.id.bookTitle);
+        TextView bookTitle = v.findViewById(R.id.bookTitle);
+        TextView bookId = v.findViewById(R.id.bookId);
         Button reserve = v.findViewById(R.id.out_button);
 
         reserve.setOnClickListener(v1 -> {
             Intent intent = new Intent(v1.getContext(), com.example.catalunhab.activity.ReservationActivity.class);
             intent.putExtra(BOOK_TITLE, bookTitle.getText());
+            intent.putExtra(BOOK_ID, bookId.getText());
             v1.getContext().startActivity(intent);
         });
 
@@ -131,6 +136,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         holder.titleText.setText(dataSet.get(position).getTitle());
         holder.authorText.setText(dataSet.get(position).getAuthor());
+        holder.bookId.setText(dataSet.get(position).getId());
         Glide.with(holder.imageItem.getContext()).load(uri).into(holder.imageItem);
     }
 

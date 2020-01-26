@@ -16,18 +16,14 @@
 package com.example.catalunhab.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.catalunhab.type.Book;
 import com.example.sdaassign4_2019.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -81,24 +77,18 @@ public class UploadDataActivity extends AppCompatActivity {
                 book.setAvailable(true);
 
                 storageReference.child(bookStorageFolderName + "/" + bookNamePattern + (x + 1) + jpgExtension)
-                        .getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        book.setImage(uri.toString());
-                        mDatabase.child(booksLabel).child(book.getId()).setValue(book);
+                        .getDownloadUrl().addOnSuccessListener(uri -> {
+                            book.setImage(uri.toString());
+                            mDatabase.child(booksLabel).child(book.getId()).setValue(book);
 
-                        Log.d(TAG, "Book added to database: " + book.toString());
-                        Toast toast = Toast.makeText(getApplicationContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error getting URI ", e);
-                        Toast toast = Toast.makeText(getApplicationContext(), R.string.images_upload_error, Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
+                            Log.d(TAG, "Book added to database: " + book.toString());
+                            Toast toast = Toast.makeText(getApplicationContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT);
+                            toast.show();
+                        }).addOnFailureListener(e -> {
+                            Log.d(TAG, "Error getting URI ", e);
+                            Toast toast = Toast.makeText(getApplicationContext(), R.string.images_upload_error, Toast.LENGTH_SHORT);
+                            toast.show();
+                        });
             }
 
             Intent intent = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);

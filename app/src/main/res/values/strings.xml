@@ -46,6 +46,7 @@
     <string name="wrong_password">Wrong password</string>
     <string name="reservation_intro">Please select available dates to reserve </string>
     <string name="picked_date">You picked the following date: </string>
+    <string name="reservation_summary">Press confirm to reserve. \nPlease pick up the book on the selected date or your reservation will be cancelled. \nHappy reading</string>
 
     <!-- Summary -->
     <string name="clear_data_summary">Clears all preferences on this screen</string>

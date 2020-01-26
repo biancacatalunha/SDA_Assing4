@@ -5,19 +5,24 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.catalunhab.adapter.BooksAdapter;
+import com.example.catalunhab.type.Reservation;
 import com.example.sdaassign4_2019.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Objects;
+
+import static com.example.catalunhab.activity.LoginActivity.userInfo;
 
 /**
  * Show a date picker when the select date button is clicked
@@ -31,6 +36,7 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     private DatePickerDialog dpd;
+    String calendarView;
     Calendar now;
     Button fromButton;
     Button toButton;
@@ -42,9 +48,6 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
     Calendar toDate;
     Calendar fromDate;
     Intent intent;
-    //Instead of having everything in one page separate each step
-    //from -> to -> reservation summary -> confirm
-    //with back buttons
 
     /**
      * Required empty public constructor
@@ -75,27 +78,28 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
 
     public void setOnClickListeners() {
         fromButton.setOnClickListener(v -> {
+            calendarView = "from";
             dpd = getDatePicker();
 
             Calendar maxDate = Calendar.getInstance();
             maxDate.add(Calendar.MONTH, 3);
             dpd.setMinDate(now);
             dpd.setMaxDate(maxDate);
-            Calendar pickUp = Calendar.getInstance();
-            Calendar dropOff = Calendar.getInstance();
-            dropOff.add(Calendar.DATE, 3);
-            ArrayList<Calendar> range = getDatesBetween(pickUp, dropOff);
+//            Calendar pickUp = Calendar.getInstance();
+//            Calendar dropOff = Calendar.getInstance();
+//            dropOff.add(Calendar.DATE, 3);
+//            ArrayList<Calendar> range = getDatesBetween(pickUp, dropOff);
+//
+//            ArrayList<Date> rangeDate = new ArrayList<>();
+//            for (Calendar k : range) {
+//                rangeDate.add(k.getTime());
+//            }
+//
+//            Calendar[] array = range.toArray(new Calendar[0]);
+//
+//            Log.d(TAG, "Range is " + rangeDate.toString());
 
-            ArrayList<Date> rangeDate = new ArrayList<>();
-            for (Calendar k : range) {
-                rangeDate.add(k.getTime());
-            }
-
-            Calendar[] array = range.toArray(new Calendar[0]);
-
-            Log.d(TAG, "Range is " + rangeDate.toString());
-
-            dpd.setDisabledDays(array);
+//            dpd.setDisabledDays(array);
 
 
             dpd.setOnCancelListener(dialog -> {
@@ -106,10 +110,13 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
         });
 
         toButton.setOnClickListener(v -> {
+            calendarView = "to";
+
             dpd = getDatePicker();
-            Calendar maxDate = Calendar.getInstance();
+            Calendar maxDate = new GregorianCalendar();
+            maxDate.setTime(fromDate.getTime());
             maxDate.add(Calendar.MONTH, 3);
-            dpd.setMinDate(now);
+            dpd.setMinDate(fromDate);
             dpd.setMaxDate(maxDate);
 
             dpd.setOnCancelListener(dialog -> {
@@ -193,10 +200,41 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
      */
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        fromDate = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+        if(calendarView.equals("from")) {
+            fromDate = new GregorianCalendar(year, monthOfYear, dayOfMonth);
 
-        fromDateTextView.setText(String.format("%s, %s", getString(R.string.picked_date), dateFormat.format(fromDate.getTime())));
-        toButton.setEnabled(true);
-        dpd = null;
+            fromDateTextView.setText(String.format("%s %s", getString(R.string.picked_date), dateFormat.format(fromDate.getTime())));
+            toButton.setEnabled(true);
+            dpd = null;
+        } else if(calendarView.equals("to")) {
+            toDate = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+            toDateTextView.setText(String.format("%s %s", getString(R.string.picked_date), dateFormat.format(toDate.getTime())));
+            reservationSummary.setText(R.string.reservation_summary);
+            confirmButton.setEnabled(true);
+            confirmButton.setOnClickListener(v -> reservationConfirmation());
+            dpd = null;
+        }
+    }
+
+    public void reservationConfirmation() {
+        Reservation reservation = new Reservation(
+                "1",
+                userInfo.getId(),
+                intent.getStringExtra(BooksAdapter.BOOK_ID),
+                fromDate.getTime(),
+                toDate.getTime(),
+                "open"
+        );
+
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("reservations");
+        mDatabase.child(reservation.getReservationId()).setValue(reservation);
+
+        Log.d(TAG, "Reservation successful " + reservation.toString());
+        Toast toast = Toast.makeText(getApplicationContext(), "Reservation successful", Toast.LENGTH_SHORT);
+        toast.show();
+
+
+        Intent intent = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);
+        startActivity(intent);
     }
 }

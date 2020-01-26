@@ -15,8 +15,8 @@
         <activity android:name="com.example.catalunhab.activity.UploadDataActivity"/>
         <activity android:name="com.example.catalunhab.activity.BaseActivity" />
         <activity android:name="com.example.catalunhab.activity.ReservationActivity" />
-        <activity android:name="com.example.catalunhab.activity.LoginActivity"/>
-            <activity android:name="com.example.catalunhab.MainActivity" >
+        <activity android:name="com.example.catalunhab.MainActivity"/>
+            <activity android:name="com.example.catalunhab.activity.LoginActivity" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.catalunhab.FromDatePicker" />
     </application>
 
 </manifest>
