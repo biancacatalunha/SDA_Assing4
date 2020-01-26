@@ -45,6 +45,7 @@
     <string name="signed_out">Signed Out</string>
     <string name="wrong_password">Wrong password</string>
     <string name="reservation_intro">Please select available dates to reserve </string>
+    <string name="picked_date">You picked the following date: </string>
 
     <!-- Summary -->
     <string name="clear_data_summary">Clears all preferences on this screen</string>

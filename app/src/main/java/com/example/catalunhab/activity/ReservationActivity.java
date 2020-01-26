@@ -12,7 +12,11 @@ import com.example.catalunhab.adapter.BooksAdapter;
 import com.example.sdaassign4_2019.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 
 /**
@@ -24,15 +28,23 @@ import java.util.Objects;
 public class ReservationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "ReservationActivity";
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
     private DatePickerDialog dpd;
     Calendar now;
     Button fromButton;
     Button toButton;
     Button confirmButton;
-    TextView fromDate;
-    TextView toDate;
+    TextView fromDateTextView;
+    TextView toDateTextView;
     TextView reservationSummary;
     TextView reservationIntro;
+    Calendar toDate;
+    Calendar fromDate;
+    Intent intent;
+    //Instead of having everything in one page separate each step
+    //from -> to -> reservation summary -> confirm
+    //with back buttons
 
     /**
      * Required empty public constructor
@@ -46,13 +58,13 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
+        intent = getIntent();
 
         fromButton = findViewById(R.id.fromButton);
         toButton = findViewById(R.id.toButton);
         confirmButton = findViewById(R.id.confirmButton);
-        fromDate = findViewById(R.id.fromDate);
-        toDate = findViewById(R.id.toDate);
+        fromDateTextView = findViewById(R.id.fromDate);
+        toDateTextView = findViewById(R.id.toDate);
         reservationSummary = findViewById(R.id.reservationSummary);
         reservationIntro = findViewById(R.id.reservationIntro);
 
@@ -63,16 +75,37 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
 
     public void setOnClickListeners() {
         fromButton.setOnClickListener(v -> {
+            dpd = getDatePicker();
+
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.MONTH, 3);
+            dpd.setMinDate(now);
+            dpd.setMaxDate(maxDate);
+            Calendar pickUp = Calendar.getInstance();
+            Calendar dropOff = Calendar.getInstance();
+            dropOff.add(Calendar.DATE, 3);
+            ArrayList<Calendar> range = getDatesBetween(pickUp, dropOff);
+
+            ArrayList<Date> rangeDate = new ArrayList<>();
+            for (Calendar k : range) {
+                rangeDate.add(k.getTime());
+            }
+
+            Calendar[] array = range.toArray(new Calendar[0]);
+
+            Log.d(TAG, "Range is " + rangeDate.toString());
+
+            dpd.setDisabledDays(array);
 
 
-//            Calendar[] days = new Calendar[13];
-//            for (int i = -6; i < 7; i++) {
-//                Calendar day = Calendar.getInstance();
-//                day.add(Calendar.DAY_OF_MONTH, i * 2);
-//                days[i + 6] = day;
-//            }
-//            dpd.setSelectableDays(days);
-//            dpd.setDisabledDays();
+            dpd.setOnCancelListener(dialog -> {
+                Log.d(TAG, "Dialog was cancelled");
+                dpd = null;
+            });
+            dpd.show(getSupportFragmentManager(), TAG);
+        });
+
+        toButton.setOnClickListener(v -> {
             dpd = getDatePicker();
             Calendar maxDate = Calendar.getInstance();
             maxDate.add(Calendar.MONTH, 3);
@@ -112,8 +145,28 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
         dpd.setCancelColor(getColor(R.color.colorSurface));
         dpd.setVersion(DatePickerDialog.Version.VERSION_2);
         dpd.autoDismiss(true);
+        dpd.setTitle(String.format("%s %s", getString(R.string.reservation_intro), intent.getStringExtra(BooksAdapter.BOOK_TITLE)));
 
         return dpd;
+    }
+
+    /**
+     * https://www.baeldung.com/java-between-dates
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static ArrayList<Calendar> getDatesBetween(Calendar startDate, Calendar endDate) {
+        ArrayList<Calendar> datesInRange = new ArrayList<>();
+
+        while (startDate.before(endDate)) {
+            Calendar result = new GregorianCalendar();
+            result.setTime(startDate.getTime());
+            datesInRange.add(result);
+            startDate.add(Calendar.DATE, 1);
+        }
+        return datesInRange;
     }
 
     @Override
@@ -140,8 +193,10 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
      */
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        String date = "You picked the following date: "+dayOfMonth+"/"+(++monthOfYear)+"/"+year;
-        fromDate.setText(date);
+        fromDate = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+
+        fromDateTextView.setText(String.format("%s, %s", getString(R.string.picked_date), dateFormat.format(fromDate.getTime())));
+        toButton.setEnabled(true);
         dpd = null;
     }
 }
