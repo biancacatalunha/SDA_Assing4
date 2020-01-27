@@ -33,6 +33,8 @@ import com.example.sdaassign4_2019.R;
 
 import java.util.Objects;
 
+import static com.example.catalunhab.activity.LoginActivity.EMAIL;
+import static com.example.catalunhab.activity.LoginActivity.NAME;
 import static com.example.catalunhab.activity.LoginActivity.mAuth;
 import static com.example.catalunhab.activity.LoginActivity.mGoogleSignInClient;
 
@@ -48,6 +50,8 @@ import static com.example.catalunhab.activity.LoginActivity.mGoogleSignInClient;
  * Settings - https://developer.android.com/guide/topics/ui/settings
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    public static final String NOT_SET = "Not Set";
 
     private EditTextPreference email;
     private EditTextPreference name;
@@ -171,7 +175,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
-    //todo put this method in loginActivity
+    /**
+     * Signs the user out and returns to the main activity
+     */
     private void signOut() {
         Log.d(TAG, "Sign Out called");
 
@@ -192,7 +198,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     /**
      * This dialog is displayed when the user clicks on the clear data switch.
-     * It asks if the user is sure, if so, clears all SharedPreferences data and
+     * It asks if the user is sure, if so, clears name and email from SharedPreferences and
      * reloads the preferences fragment, in order to display the new value of the
      * preferences on the screen.
      *
@@ -207,7 +213,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()));
                     pref.edit()
-                            .clear()
+                            .putString(NAME, NOT_SET)
+                            .putString(EMAIL, NOT_SET)
                             .apply();
 
                     initiate();

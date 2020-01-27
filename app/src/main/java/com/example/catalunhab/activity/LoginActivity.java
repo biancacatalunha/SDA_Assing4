@@ -51,14 +51,18 @@ import java.util.Objects;
  *
  * References:
  * Firebase - https://firebase.google.com/docs/firestore/quickstart
+ * Google Auth - https://firebase.google.com/docs/auth/android/google-signin
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
+    private static final String DATABASE_CHILD_NAME = "users";
+    public static final String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String ID = "id";
 
     public static FirebaseAuth mAuth;
-    //todo fix this
     public static GoogleSignInClient mGoogleSignInClient;
     public static User userInfo;
 
@@ -90,6 +94,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * Signs in on click
+     * @param v the view the on click came from
+     */
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.signInButton) {
@@ -159,7 +167,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                         writeToDatabase();
 
-                        Intent MainActivity = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);
+                        Intent MainActivity = new Intent(getApplicationContext(), com.example.catalunhab.activity.MainActivity.class);
                         startActivity(MainActivity);
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -179,31 +187,34 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
 
-        String name = pref.getString("name", null);
-        String email = pref.getString("email", null);
-        String id = pref.getString("id", null);
+        String name = pref.getString(NAME, null);
+        String email = pref.getString(EMAIL, null);
+        String id = pref.getString(ID, null);
 
         if(name == null) {
-            editor.putString("name", userInfo.getName());
+            editor.putString(NAME, userInfo.getName());
             Log.d(TAG, "Name: " + userInfo.getName() + " added to SharedPreferences");
         }
 
         if(email == null) {
-            editor.putString("email", userInfo.getEmail());
+            editor.putString(EMAIL, userInfo.getEmail());
             Log.d(TAG, "Email: " + userInfo.getEmail() + " added to SharedPreferences");
         }
 
         if(id == null) {
-            editor.putString("id", userInfo.getId());
+            editor.putString(ID, userInfo.getId());
             Log.d(TAG, "Id: " + userInfo.getId() + " added to SharedPreferences");
         }
 
         editor.apply();
     }
 
+    /**
+     * Stores the user information into the database
+     */
     private void writeToDatabase() {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(userInfo.getId()).setValue(userInfo);
+        mDatabase.child(DATABASE_CHILD_NAME).child(userInfo.getId()).setValue(userInfo);
         Log.d(TAG, "Wrote user info to database");
     }
 }

@@ -29,6 +29,9 @@ import androidx.appcompat.app.AppCompatActivity;
  * @author Bianca Catalunha <bianca.catalunha2@mail.dcu.ie>
  * @since January 2020
  *
+ * References:
+ * Firebase - https://firebase.google.com/docs/firestore/quickstart
+ * Google Auth - https://firebase.google.com/docs/auth/android/google-signin
  */
 public class BaseActivity extends AppCompatActivity {
 

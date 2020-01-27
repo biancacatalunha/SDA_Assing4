@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sdaassign4_2019">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,19 +13,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.catalunhab.MainActivity" />
-        <activity android:name="com.example.catalunhab.activity.UploadDataActivity"/>
-        <activity android:name="com.example.catalunhab.activity.BaseActivity" />
-        <activity android:name="com.example.catalunhab.activity.ReservationActivity" />
-        <activity android:name="com.example.catalunhab.MainActivity"/>
-            <activity android:name="com.example.catalunhab.activity.LoginActivity" >
 
+        <activity android:name="com.example.catalunhab.activity.MainActivity"/>
+
+        <activity android:name="com.example.catalunhab.activity.UploadDataActivity"/>
+
+        <activity android:name="com.example.catalunhab.activity.BaseActivity" />
+
+        <activity android:name="com.example.catalunhab.activity.ReservationActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.catalunhab.activity.MainActivity" />
+        </activity>
+
+        <activity android:name="com.example.catalunhab.activity.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

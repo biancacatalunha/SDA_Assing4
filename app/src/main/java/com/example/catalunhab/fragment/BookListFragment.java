@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * DCU - SDA - Assignment 4
@@ -51,7 +53,7 @@ import java.util.Iterator;
 public class BookListFragment extends Fragment {
 
     private static final String TAG = "BookListFragment";
-
+    private static final String DATABASE_CHILD_NAME = "books";
     /**
      * Required empty constructor
      */
@@ -80,26 +82,30 @@ public class BookListFragment extends Fragment {
     }
 
     /**
+     * Retrieves books from teh database
+     * - Se†s an Listener for single value event
+     * - Retrieves the books json as an iterator
+     * - Transforms the JSON object to a Book object and adds it to a list
+     * - Calls the recyclerViewAdapter passing the list of books
+     *
      * Reference:
      * Retrieve objects from db - https://riptutorial.com/android/example/25872/retrieving-data-from-firebase
      */
     private void getBooksFromDatabase() {
-
-        FirebaseDatabase.getInstance().getReference().child("books")
+        FirebaseDatabase.getInstance().getReference().child(DATABASE_CHILD_NAME)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Iterator<DataSnapshot> books = dataSnapshot.getChildren().iterator();
                         ArrayList<Book> booksList = new ArrayList<>();
 
                         while (books.hasNext()) {
-                            Book book = books.next().getValue(Book.class);
-                            booksList.add(book);
+                            booksList.add(books.next().getValue(Book.class));
                         }
 
                         Log.d(TAG, "Book arrayList: " + booksList.toString());
 
-                        RecyclerView recyclerView = getActivity().findViewById(R.id.bookView_view);
+                        RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.bookView_view);
 
                         BooksAdapter recyclerViewAdapter = new BooksAdapter(booksList);
                         recyclerView.setAdapter(recyclerViewAdapter);
@@ -107,8 +113,7 @@ public class BookListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {}
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
                 });
     }
-
 }

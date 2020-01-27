@@ -74,7 +74,6 @@ public class UploadDataActivity extends AppCompatActivity {
                 book.setId(String.valueOf(x+1));
                 book.setTitle(String.valueOf(titles[x]));
                 book.setAuthor(String.valueOf(authors[x]));
-                book.setAvailable(true);
 
                 storageReference.child(bookStorageFolderName + "/" + bookNamePattern + (x + 1) + jpgExtension)
                         .getDownloadUrl().addOnSuccessListener(uri -> {
@@ -91,7 +90,7 @@ public class UploadDataActivity extends AppCompatActivity {
                         });
             }
 
-            Intent intent = new Intent(getApplicationContext(), com.example.catalunhab.MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         } else {
             Log.d(TAG, "Number of titles do not match number of authors");
