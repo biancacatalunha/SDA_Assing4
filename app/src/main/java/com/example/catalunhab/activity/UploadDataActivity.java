@@ -37,7 +37,7 @@ import com.google.firebase.storage.StorageReference;
  * @author Bianca Catalunha <bianca.catalunha2@mail.dcu.ie>
  * @since January 2020
  *
- *
+ * Reference: https://firebase.google.com/docs/database/android/read-and-write
  */
 public class UploadDataActivity extends AppCompatActivity {
 

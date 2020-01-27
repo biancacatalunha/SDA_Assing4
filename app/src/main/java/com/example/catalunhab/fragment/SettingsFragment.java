@@ -34,6 +34,7 @@ import com.example.sdaassign4_2019.R;
 import java.util.Objects;
 
 import static com.example.catalunhab.activity.LoginActivity.EMAIL;
+import static com.example.catalunhab.activity.LoginActivity.ID;
 import static com.example.catalunhab.activity.LoginActivity.NAME;
 import static com.example.catalunhab.activity.LoginActivity.mAuth;
 import static com.example.catalunhab.activity.LoginActivity.mGoogleSignInClient;
@@ -52,6 +53,9 @@ import static com.example.catalunhab.activity.LoginActivity.mGoogleSignInClient;
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     public static final String NOT_SET = "Not Set";
+    public static final String RESET = "reset";
+    public static final String ADMIN = "admin";
+    public static final String SIGN_OUT = "signOut";
 
     private EditTextPreference email;
     private EditTextPreference name;
@@ -87,15 +91,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void initiate() {
         setPreferencesFromResource(R.xml.preferences, rootKeyGlobal);
 
-        email = findPreference("email");
-        name = findPreference("name");
-        reset = findPreference("reset");
-        id = findPreference("id");
-        signOut = findPreference("signOut");
-        admin = findPreference("admin");
+        email = findPreference(EMAIL);
+        name = findPreference(NAME);
+        reset = findPreference(RESET);
+        id = findPreference(ID);
+        signOut = findPreference(SIGN_OUT);
+        admin = findPreference(ADMIN);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getContext()));
-        String idValue = pref.getString("id", null);
+        String idValue = pref.getString(ID, null);
         id.setSummary(idValue);
 
         onBindListeners(email);

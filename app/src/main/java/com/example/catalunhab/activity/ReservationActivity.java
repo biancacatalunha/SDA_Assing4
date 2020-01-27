@@ -126,7 +126,7 @@ public class ReservationActivity extends AppCompatActivity implements DatePicker
         TextView reservationIntro = findViewById(R.id.reservationIntro);
 
         if(!userInfo.getName().equals(NOT_SET)) {
-            reservationIntro.setText(String.format("%s %s %s", userInfo.getName(), getString(R.string.reservation_intro_with_user_name), intent.getStringExtra(BooksAdapter.BOOK_TITLE)));
+            reservationIntro.setText(String.format("%s%s %s", userInfo.getName(), getString(R.string.reservation_intro_with_user_name), intent.getStringExtra(BooksAdapter.BOOK_TITLE)));
         } else {
             reservationIntro.setText(String.format("%s %s", getString(R.string.reservation_intro), intent.getStringExtra(BooksAdapter.BOOK_TITLE)));
         }
